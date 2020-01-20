@@ -82,8 +82,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
         <!-- required for unit tests -->
         <dependency>
@@ -153,6 +153,11 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
       </dependency>
+      <dependency>
+        <groupId>com.blueconic</groupId>
+        <artifactId>browscap-java</artifactId>
+        <version>1.2.13</version>
+     </dependency>
     </dependencies>
 
     <build>

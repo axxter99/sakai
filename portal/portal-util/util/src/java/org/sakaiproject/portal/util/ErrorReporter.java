@@ -39,6 +39,9 @@ import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 import org.sakaiproject.authz.cover.SecurityService;
+import org.sakaiproject.browscap.logic.ProjectLogic;
+import org.sakaiproject.browscap.model.Host;
+import org.sakaiproject.component.cover.ComponentManager;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.email.cover.EmailService;
 import org.sakaiproject.event.api.UsageSession;
@@ -294,12 +297,23 @@ public class ErrorReporter
 
 			if (usageSession != null)
 			{
+				//Browscap
+				ProjectLogic browscap = ComponentManager.get(ProjectLogic.class);
+				Host host = browscap.getBrowcap(usageSession.getUserAgent());
 				uSessionInfo = rb.getString("bugreport.useragent") + ": "
 						+ usageSession.getUserAgent() + "\n"
 						+ rb.getString("bugreport.browserid") + ": "
 						+ usageSession.getBrowserId() + "\n"
 						+ rb.getString("bugreport.ip") + ": "
-						+ usageSession.getIpAddress() + "\n";
+						+ usageSession.getIpAddress() + "\n"
+						+ rb.getString("bugreport.browser") + ":"
+						+ host.getBrowser() + " "
+						+ rb.getString("bugreport.browserType") + ":"
+						+ host.getBrowserType() + "\n"
+						+ rb.getString("bugreport.deviceType") + ":"
+						+ host.getDeviceType() + "\n"
+						+ rb.getString("bugreport.platform") + ":"
+						+ host.getPlatform();
 			}
 
 			String pathInfo = "";
@@ -347,6 +361,7 @@ public class ErrorReporter
 				problemDisplay = rb.getString("bugreport.stacktrace") + ":\n\n"
 				+ problem + "\n\n";
 			}
+			
 			
 			String body = rb.getString("bugreport.bugid") + ": " + bugId + "\n"
 					+ rb.getString("bugreport.user") + ": " + userEid + " ("
