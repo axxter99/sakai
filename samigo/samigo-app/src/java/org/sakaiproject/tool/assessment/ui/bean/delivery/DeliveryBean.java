@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TimeZone;
@@ -1266,9 +1267,11 @@ public class DeliveryBean implements Serializable {
         getIpAddress();
       if (next != null && next.contains( "*" )) {
         next = next.substring(0, next.indexOf("*"));
+        if (thisIp.trim().startsWith(next.trim())) {
+        	return "takeAssessment";
+        }
       }
-      if (next == null || next.trim().equals("") ||
-          thisIp.trim().startsWith(next.trim())) {
+      if (next == null || next.trim().equals("") || next.trim().equals(thisIp.trim())) {
         // in post 2.1, clicking at Begin Assessment takes users to the 1st question.
         return "takeAssessment";
       }
@@ -2114,6 +2117,7 @@ public class DeliveryBean implements Serializable {
 	  boolean isAvailable = true;
 	  Date currentDate = new Date();
 		Date startDate;
+		verifyExtendedTimeDeliveryService();
 		if (extendedTimeDeliveryService.hasExtendedTime()) {
 			startDate = extendedTimeDeliveryService.getStartDate();
 		} else {
@@ -2128,6 +2132,7 @@ public class DeliveryBean implements Serializable {
   public boolean pastDueDate(){
     boolean pastDueDate = true;
     Date currentDate = new Date();
+    verifyExtendedTimeDeliveryService();
     Date due = extendedTimeDeliveryService.hasExtendedTime() ? extendedTimeDeliveryService.getDueDate() : publishedAssessment.getAssessmentAccessControl().getDueDate();
 
     if (due == null && AssessmentAccessControlIfc.ACCEPT_LATE_SUBMISSION.equals(publishedAssessment.getAssessmentAccessControl().getLateHandling())) {
@@ -2146,6 +2151,7 @@ public class DeliveryBean implements Serializable {
   public boolean isAcceptLateSubmission() {
 	  boolean acceptLateSubmission = AssessmentAccessControlIfc.ACCEPT_LATE_SUBMISSION.equals(publishedAssessment.getAssessmentAccessControl().getLateHandling());
 	  //If using extended Time Delivery, the late submission setting is based on retracted
+	  verifyExtendedTimeDeliveryService();
 	  if (extendedTimeDeliveryService.hasExtendedTime()) {
 		  //Accept it if it's not retracted on the extended time entry
 		  acceptLateSubmission = (extendedTimeDeliveryService.getRetractDate() != null) ? !isRetracted(false) : false;
@@ -2167,6 +2173,7 @@ public class DeliveryBean implements Serializable {
   {
     Date retractDate = null;
     boolean acceptLateSubmission = AssessmentAccessControlIfc.ACCEPT_LATE_SUBMISSION.equals(publishedAssessment.getAssessmentAccessControl().getLateHandling());
+    verifyExtendedTimeDeliveryService();
     if (extendedTimeDeliveryService.hasExtendedTime()) {
     	retractDate = extendedTimeDeliveryService.getRetractDate();
     } else if (acceptLateSubmission) {
@@ -2604,5 +2611,14 @@ public class DeliveryBean implements Serializable {
     public String getPublishedURL() {
         PublishedAssessmentSettingsBean pasBean = (PublishedAssessmentSettingsBean) ContextUtil.lookupBean("publishedSettings");
         return pasBean.generatePublishedURL(publishedAssessment);
+    }
+
+    /**
+     * Ensure that the ExtendedTimeDeliveryService instance is making reference to the correct assessment.
+     */
+    private void verifyExtendedTimeDeliveryService() {
+        if(!Objects.equals(extendedTimeDeliveryService.getPublishedAssessmentId(), publishedAssessment.getPublishedAssessmentId())) {
+            extendedTimeDeliveryService = new ExtendedTimeDeliveryService(publishedAssessment);
+        }
     }
 }
