@@ -168,6 +168,7 @@ import org.sakaiproject.util.RequestFilter;
 import org.sakaiproject.util.ResourceLoader;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.sakaiproject.util.api.FormattedText;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -348,6 +349,7 @@ public class DavServlet extends HttpServlet
 	private SiteService siteService;
 	private UserTimeService userTimeService;
 	private ServerConfigurationService serverConfigurationService;
+	private FormattedText formattedText;
 
         // can be called on id with or withing adjustid, since
         // the prefixes we check for are not adjusted
@@ -579,7 +581,8 @@ public class DavServlet extends HttpServlet
 		userDirectoryService = ComponentManager.get(UserDirectoryService.class);
 		userTimeService = ComponentManager.get(UserTimeService.class);
 		siteService = ComponentManager.get(SiteService.class); 
-		serverConfigurationService = ComponentManager.get(ServerConfigurationService.class); 
+		serverConfigurationService = ComponentManager.get(ServerConfigurationService.class);
+		formattedText = ComponentManager.get(FormattedText.class);
 
 		// Set our properties from the initialization parameters
 		String value = null;
@@ -1740,7 +1743,7 @@ public class DavServlet extends HttpServlet
 						}
 					}
 					// note that we put back the trailing /
-					out.println("<tr><td><a href=\"" + Validator.escapeUrl(xss) + "/\">" + Validator.escapeHtml(xss)
+					out.println("<tr><td><a href=\"" + formattedText.escapeUrl(xss) + "/\">" + formattedText.escapeHtml(xss)
 							+ "</a></td><td><b>" + rb.getString("folder") + "</b>" + "</td><td>" + "</td><td>" + "</td><td>" + "</td></tr>");
 				}
 				else
@@ -1754,13 +1757,13 @@ public class DavServlet extends HttpServlet
 						Instant modTime = properties.getInstantProperty(ResourceProperties.PROP_MODIFIED_DATE);
 						String modifiedTime =  userTimeService.shortLocalizedTimestamp(modTime, rb.getLocale());
 						String filetype = nextres.getContentType();
-						out.println("<tr><td><a href=\"" + Validator.escapeUrl(xss) + "\">" + Validator.escapeHtml(xss)
+						out.println("<tr><td><a href=\"" + formattedText.escapeUrl(xss) + "\">" + formattedText.escapeHtml(xss)
 								+ "</a></td><td>" + filesize + "</td><td>" + createdBy + "</td><td>" + filetype + "</td><td>"
 								+ modifiedTime + "</td></tr>");
 					}
 					catch (Throwable ignore)
 					{
-						out.println("<tr><td><a href=\"" + Validator.escapeUrl(xss) + "\">" + Validator.escapeHtml(xss)
+						out.println("<tr><td><a href=\"" + formattedText.escapeUrl(xss) + "\">" + formattedText.escapeHtml(xss)
 								+ "</a></td><td>" + "</td><td>" + "</td><td>" + "</td><td>" + "</td></tr>");
 
 					}
