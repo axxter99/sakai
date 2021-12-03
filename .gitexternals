@@ -23,7 +23,7 @@
 # No longer in 11.x but still in use at UCT
 [external "linktool"]
 	path = linktool
-	url = https://github.com/cilt-uct/linktool-uct.git
+	url = https://github.com/cilt-uct/linktool.git
 	branch = 21.x
 [external "roster"]
 	path = roster

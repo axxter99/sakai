@@ -9,8 +9,10 @@ component    Contains the component which is deployed to the
    to use the unboundid provider is included in the configuration files:
    
 sample       Contains the sample providers.
+unboundid    Contains the unboundid UserDirectoryProvider 
 
-unboundid    Contains the unboundid UserDirectoryProvider - see https://jira.sakaiproject.org/browse/SAK-23630 for proper configuration and use.
+	- see https://jira.sakaiproject.org/browse/SAK-23630 for proper configuration and use.
+	OR the README In that directory for proper configuration and use.
 
 kerberos     Contains a basic Kerberos provider.
 

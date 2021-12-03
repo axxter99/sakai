@@ -6,6 +6,7 @@
 *.swp
 *.orig
 *.rej
+bin
 target
 sakai-demo.tar.gz
 sakai-demo.zip
