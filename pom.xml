@@ -130,8 +130,8 @@
                 <module>profilewow</module>
 
                 <!-- contrib -->
-                <!-- <module>useralias</module-->
-                <!-- module>sms</module-->
+                <module>useralias</module>
+                <module>sms</module>
                 <module>qna</module>
 		        <!-- module>gradebook1</module-->
                 <module>groupmanager</module>
