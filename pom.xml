@@ -79,7 +79,6 @@
                 <module>library</module>
                 <module>login</module>
                 <module>mailarchive</module>
-                <module>mailsender</module>
                 <module>message</module>
                 <module>msgcntr</module>
                 <module>mycalendar</module>
@@ -133,7 +132,7 @@
                 <module>useralias</module>
                 <module>sms</module>
                 <module>qna</module>
-		        <!-- module>gradebook1</module-->
+                <module>gradebook1</module>
                 <module>groupmanager</module>
                 <module>blogwow</module>
                 <module>evaluation</module>
