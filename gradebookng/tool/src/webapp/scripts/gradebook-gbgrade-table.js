@@ -1791,6 +1791,8 @@ GbGradeTable.setupToggleGradeItems = function() {
     var $group = $itemFilter.closest(".gb-item-filter-group");
     var $label = $group.find(".gb-item-category-filter label");
     var $input = $group.find(".gb-item-category-filter input");
+    const $hideThisCategory = $group.find(".gb-hide-this-category");
+    const $showThisCategory = $group.find(".gb-show-this-category");
 
     var checkedItemFilters = $group.find(".gb-item-filter :input:checked, .gb-item-category-score-filter :input:checked").length;
     var itemFilters = $group.find(".gb-item-filter :input, .gb-item-category-score-filter :input").length;
@@ -1800,16 +1802,19 @@ GbGradeTable.setupToggleGradeItems = function() {
       removeClass("off").
       find(".gb-filter-partial-signal").remove();
 
-    if (checkedItemFilters == 0) {
+    if (checkedItemFilters === 0) {
       $input.prop("checked", false);
       $label.addClass("off");
-    } else if (checkedItemFilters == itemFilters) {
+      $hideThisCategory.hide();
+    } else if (checkedItemFilters === itemFilters) {
       $input.prop("checked", true);
+      $showThisCategory.hide();
     } else {
       $input.prop("checked", false);
       $label.addClass("partial");
-      $label.find(".gb-item-filter-signal").
-        append($("<span>").addClass("gb-filter-partial-signal"));
+      $label.find(".gb-item-filter-signal").append($("<span>").addClass("gb-filter-partial-signal"));
+      $hideThisCategory.show();
+      $showThisCategory.show();
     }
   };
 
@@ -1886,6 +1891,10 @@ GbGradeTable.setupToggleGradeItems = function() {
         .attr("data-suppress-update-view-preferences", "true")
         .trigger("click");
 
+    // Everything in every category is shown, so we should hide the "show this category" menu options
+    $panel.find(".gb-show-this-category").hide();
+    $panel.find(".gb-hide-this-category").show();
+
     GbGradeTable.updateViewPreferences();
   };
 
@@ -1895,6 +1904,10 @@ GbGradeTable.setupToggleGradeItems = function() {
     $panel.find(".gb-item-filter :input:checked, .gb-item-category-score-filter :input:checked")
         .attr("data-suppress-update-view-preferences", "true")
         .trigger("click");
+
+    // Everything in every category is hidden, so we should hide the "hide this category" menu options
+    $panel.find(".gb-hide-this-category").hide();
+    $panel.find(".gb-show-this-category").show();
 
     GbGradeTable.updateViewPreferences();
   };
@@ -2041,8 +2054,17 @@ GbGradeTable.setupToggleGradeItems = function() {
         on("click", ".gb-toggle-this-category", function(event) {
           event.preventDefault();
 
-          var $filter = $(event.target).closest(".gb-item-category-filter");
-          $filter.find(":input").trigger("click");
+          const hide = event.target.className.includes("hide");
+          const $filter = $(event.target).closest(".gb-item-filter-group");
+          if (hide) {
+            $filter.find("div.gb-filter").not(".off").find(":input").trigger("click");
+            $filter.find(".gb-hide-this-category").hide();
+            $filter.find(".gb-show-this-category").show();
+          } else {
+            $filter.find("div.off").find(":input").trigger("click");
+            $filter.find(".gb-hide-this-category").show();
+            $filter.find(".gb-show-this-category").hide();
+          }
           $(this).focus();
         }).
         on("click", ".gb-toggle-this-item", function(event) {
@@ -2675,35 +2697,51 @@ GbGradeTable.setupKeyboardNavigation = function() {
 
       // menu focused
       if ($focus.closest(".dropdown-menu ").length > 0) {
-        // up arrow
-        if (event.keyCode == 38) {
-          iGotThis(true);
-          if ($focus.closest("li").index() == 0) {
-            // first item, so close the menu
-            $(".btn-group.open .dropdown-toggle").dropdown("toggle");
-            $current.focus();
-          } else {
-            $focus.closest("li").prev().find("a").focus();
-          }
-        }
-        // down arrow
-        if (event.keyCode == 40) {
-          iGotThis();
-          $focus.closest("li").next().find("a").focus();
-        }
-        // esc
-        if (event.keyCode == 27) {
-          iGotThis(true);
-          $(".btn-group.open .dropdown-toggle").dropdown("toggle");
-          $current.focus();
-        }
-        // enter
-        if (event.keyCode == 13) {
-          iGotThis(true);
-          // deselect cell so keyboard focus is given to the menu's action
-          GbGradeTable.instance.deselectCell();
-        }
-
+		  
+		  
+		switch (event.keyCode) {
+			case 38: //up arrow
+				iGotThis(true);
+				if ($focus.closest("li").index() == 0) {
+					// first item, so close the menu
+					$(".btn-group.open .dropdown-toggle").dropdown("toggle");
+					$current.focus();
+				} else {
+					$focus.closest("li").prev().find("a").focus();
+				}
+				break;
+			case 40: //down arrow
+				iGotThis();
+				$focus.closest("li").next().find("a").focus();
+				break;
+			case 37: //left arrow
+				iGotThis(true);
+				$(".btn-group.open .dropdown-toggle").dropdown("toggle");
+				$current.focus();
+				break;
+			case 39: //right arrow
+				iGotThis(true);
+				$(".btn-group.open .dropdown-toggle").dropdown("toggle");
+				$current.focus();
+				break;
+			case 27: //esc
+				iGotThis(true);
+				$(".btn-group.open .dropdown-toggle").dropdown("toggle");
+				$current.focus();
+				break;
+			case 13: //enter
+				iGotThis(true);
+				// deselect cell so keyboard focus is given to the menu's action
+				GbGradeTable.instance.deselectCell();
+				break;
+			case 9: //tab
+				iGotThis(true);
+				$(".btn-group.open .dropdown-toggle").dropdown("toggle");
+				$current.focus();
+				break;
+			default:
+				break;
+		}
         if (handled) {
           GbGradeTable.hideMetadata();
           return;

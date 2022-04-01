@@ -280,6 +280,10 @@
         </dependency>
         <dependency>
             <groupId>org.apache.ignite</groupId>
+            <artifactId>ignite-spring-cache-ext</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ignite</groupId>
             <artifactId>ignite-hibernate-core</artifactId>
         </dependency>
         <dependency>
@@ -315,7 +319,7 @@
         <dependency>
             <groupId>org.owasp.antisamy</groupId>
             <artifactId>antisamy</artifactId>
-            <version>1.5.11</version>
+            <version>1.6.4</version>
         </dependency>
         <dependency>
             <groupId>xml-apis</groupId>

@@ -1174,7 +1174,7 @@ public class SimplePageBean {
 		if (elist.size() > 0)
 			err = elist.get(0);
 		if (err != null) {
-			setErrMessage(messageLocator.getMessage("simplepage.savefailed") + err);
+			setErrMessage(messageLocator.getMessage("simplepage.savefailed"));
 			return false;
 		}
 		
@@ -1203,7 +1203,7 @@ public class SimplePageBean {
 		if (elist.size() > 0)
 			err = elist.get(0);
 		if (err != null) {
-			setErrMessage(messageLocator.getMessage("simplepage.savefailed") + err);
+			setErrMessage(messageLocator.getMessage("simplepage.savefailed"));
 			return false;
 		}
 		
@@ -1234,7 +1234,7 @@ public class SimplePageBean {
 		if (elist.size() > 0)
 			err = elist.get(0);
 		if (err != null) {
-			setErrMessage(messageLocator.getMessage("simplepage.savefailed") + err);
+			setErrMessage(messageLocator.getMessage("simplepage.savefailed"));
 			return false;
 		}
 		
@@ -1254,7 +1254,7 @@ public class SimplePageBean {
 			return true;
 		SimplePageItem item = findItem(itemId);
 		
-		return item.getPageId() == getCurrentPageId();
+		return item != null ? item.getPageId() == getCurrentPageId() : true;
 	}
 	
 	public Integer getFilterLevel(Placement placement) {
